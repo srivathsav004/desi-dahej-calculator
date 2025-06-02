@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-poppins bg-ivory text-maroon;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-baloo font-bold;
+  }
+}
+
+@layer components {
+  .input-base {
+    @apply w-full rounded-md border border-gold px-3 py-2 text-maroon-dark focus:border-royalblue focus:outline-none focus:ring-2 focus:ring-royalblue-light transition-all duration-300;
+  }
+  
+  .btn {
+    @apply px-4 py-2 rounded-md font-medium transition-all duration-300 transform hover:scale-105;
+  }
+
+  .btn-primary {
+    @apply btn bg-maroon text-ivory hover:bg-maroon-light active:bg-maroon-dark;
+  }
+
+  .btn-secondary {
+    @apply btn bg-royalblue text-ivory hover:bg-royalblue-light active:bg-royalblue-dark;
+  }
+
+  .btn-gold {
+    @apply btn bg-gold text-maroon hover:bg-gold-light active:bg-gold-dark;
+  }
+
+  .card {
+    @apply bg-white rounded-lg shadow-md border-2 border-gold-light p-4 md:p-6;
+  }
+
+  .card-header {
+    @apply text-xl md:text-2xl font-baloo font-bold text-maroon mb-4 pb-2 border-b border-gold;
+  }
+  
+  .gold-gradient {
+    @apply bg-gradient-to-r from-gold-light via-gold to-gold-dark text-transparent bg-clip-text;
+  }
+  
+  .maroon-gradient {
+    @apply bg-gradient-to-r from-maroon-light via-maroon to-maroon-dark text-transparent bg-clip-text;
+  }
+
+  .section-title {
+    @apply text-2xl md:text-3xl font-baloo font-bold text-center mb-6;
+  }
+
+  .royal-pattern {
+    background-color: #f9f7f4;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4af37' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+}
+
+.star-rating-container {
+  @apply flex space-x-1;
+}
+
+.toggle-switch {
+  @apply relative inline-flex items-center cursor-pointer;
+}
+
+.toggle-switch input {
+  @apply sr-only;
+}
+
+.toggle-slider {
+  @apply w-11 h-6 bg-gray-300 rounded-full transition-colors duration-300;
+}
+
+.toggle-slider:after {
+  content: '';
+  @apply absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-300;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  @apply bg-gold;
+}
+
+.toggle-switch input:checked + .toggle-slider:after {
+  @apply transform translate-x-5;
+}
+
+/* Parallax effect */
+.parallax {
+  @apply relative overflow-hidden;
+  perspective: 1px;
+  height: 100vh;
+}
+
+.parallax-layer {
+  @apply absolute top-0 right-0 bottom-0 left-0;
+  transform-origin: 0 0;
+}
+
+.parallax-back {
+  transform: translateZ(-1px) scale(2);
+}
+
+.parallax-base {
+  transform: translateZ(0);
+}
+
+/* Shimmer effect */
+.shimmer {
+  @apply relative overflow-hidden;
+}
+
+.shimmer::after {
+  content: '';
+  @apply absolute top-0 left-0 w-full h-full;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 215, 0, 0) 0%,
+    rgba(255, 215, 0, 0.3) 50%,
+    rgba(255, 215, 0, 0) 100%
+  );
+  background-size: 200% 100%;
+  @apply animate-shimmer;
+}
