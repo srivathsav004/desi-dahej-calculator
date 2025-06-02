@@ -6,6 +6,7 @@ import PieChart from './PieChart';
 import MemeDisplay from './MemeDisplay';
 import { getTagline, formatCurrency, prepareChartData } from '../../utils/calculations';
 import { Download, Share2 } from 'lucide-react';
+import jsPDF from 'jspdf';
 
 interface ResultCardProps {
   breakdown: DowryBreakdown;
@@ -41,9 +42,152 @@ const ResultCard: React.FC<ResultCardProps> = ({ breakdown, showMemes }) => {
   };
   
   const handleDownloadResult = () => {
-    // In a real app, this would generate a PDF or image
-    // For now, we'll just show an alert
-    alert('In a real app, this would download a PDF with your dahej calculation results!');
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+
+    // Borders
+    doc.setDrawColor(139, 0, 0);
+    doc.setLineWidth(2);
+    doc.rect(10, 10, pageWidth - 20, pageHeight - 20);
+    doc.setDrawColor(218, 165, 32);
+    doc.setLineWidth(0.5);
+    doc.rect(15, 15, pageWidth - 30, pageHeight - 30);
+
+    // Corners
+    const cornerSize = 20;
+    const drawCorner = (x: number, y: number, rotate: number) => {
+      const rad = (rotate * Math.PI) / 180;
+      const cos = Math.cos(rad);
+      const sin = Math.sin(rad);
+      doc.setDrawColor(218, 165, 32);
+      doc.setLineWidth(1);
+      doc.line(x, y, x + cornerSize * cos, y + cornerSize * sin);
+      doc.line(x, y, x - cornerSize * sin, y + cornerSize * cos);
+    };
+    drawCorner(15, 15, 0);
+    drawCorner(pageWidth - 15, 15, 90);
+    drawCorner(pageWidth - 15, pageHeight - 15, 180);
+    drawCorner(15, pageHeight - 15, 270);
+
+    // Title
+    doc.setFontSize(28);
+    doc.setTextColor(139, 0, 0);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Desi Dahej Calculator', pageWidth / 2, 40, { align: 'center' });
+    doc.setDrawColor(218, 165, 32);
+    doc.setLineWidth(1);
+    doc.line(pageWidth / 2 - 60, 45, pageWidth / 2 + 60, 45);
+
+    // Subtitle
+    doc.setFontSize(18);
+    doc.setTextColor(0, 0, 0);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Official Certificate', pageWidth / 2, 60, { align: 'center' });
+
+    // Tagline
+    doc.setFillColor(245, 245, 220);
+    doc.roundedRect(20, 70, pageWidth - 40, 20, 3, 3, 'F');
+    doc.setFontSize(14);
+    doc.setTextColor(139, 0, 0);
+    doc.text(tagline, pageWidth / 2, 83, { align: 'center' });
+
+    // Total Amount Box (smaller font, centered)
+    doc.setFillColor(139, 0, 0);
+    doc.roundedRect(20, 100, pageWidth - 40, 22, 3, 3, 'F');
+    doc.setFontSize(18);
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.text(
+      `Total ${breakdown.total < 0 ? 'Reverse Dowry' : 'Dowry'}: ${formatCurrency(breakdown.total)}`,
+      pageWidth / 2,
+      115,
+      { align: 'center' }
+    );
+
+    // Breakdown Table
+    doc.setFontSize(16);
+    doc.setTextColor(0, 0, 0);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Detailed Breakdown', pageWidth / 2, 140, { align: 'center' });
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    let yPos = 155;
+    const labelX = 30;
+    const valueX = pageWidth - 30;
+    const rowHeight = 12;
+    let rowIndex = 0;
+
+    const breakdownItems = [
+      { label: 'Base Dowry', value: breakdown.baseDowry },
+      { label: 'Job Multiplier', value: breakdown.jobMultiplier },
+      { label: 'Foreign Bonus', value: breakdown.foreignBonus },
+      { label: 'Car Value', value: breakdown.carValueAddition },
+      { label: 'Education Fee', value: breakdown.educationRecoveryFee },
+      { label: 'Prestige Tax', value: breakdown.prestigeTax },
+      { label: 'Gold Value', value: breakdown.goldEstimateValue },
+      { label: 'MIL Wishlist', value: breakdown.motherInLawWishlistTotal }
+    ];
+
+    breakdownItems.forEach((item) => {
+      if (item.value > 0) {
+        // Alternating row background
+        if (rowIndex % 2 === 0) {
+          doc.setFillColor(245, 245, 245);
+          doc.roundedRect(22, yPos - 7, pageWidth - 44, rowHeight, 2, 2, 'F');
+        }
+        doc.setTextColor(0, 0, 0);
+        doc.text(item.label, labelX, yPos);
+        doc.setTextColor(139, 0, 0);
+        doc.text(formatCurrency(item.value), valueX, yPos, { align: 'right' });
+        yPos += rowHeight;
+        rowIndex++;
+      }
+    });
+
+    if (breakdown.offSeasonDiscount > 0) {
+      doc.setFillColor(220, 255, 220);
+      doc.roundedRect(22, yPos - 7, pageWidth - 44, rowHeight, 2, 2, 'F');
+      doc.setTextColor(0, 128, 0);
+      doc.text('Off-Season Discount', labelX, yPos);
+      doc.text(`-${formatCurrency(breakdown.offSeasonDiscount)}`, valueX, yPos, { align: 'right' });
+      yPos += rowHeight;
+    }
+
+    // Decorative line
+    doc.setDrawColor(218, 165, 32);
+    doc.setLineWidth(1);
+    doc.line(20, yPos + 5, pageWidth - 20, yPos + 5);
+
+    // Disclaimer
+    doc.setFillColor(245, 245, 245);
+    doc.roundedRect(20, yPos + 15, pageWidth - 40, 30, 3, 3, 'F');
+    doc.setFontSize(10);
+    doc.setTextColor(128, 128, 128);
+    doc.text(
+      'Disclaimer: This is a satirical certificate meant to highlight the absurdity of dowry.',
+      pageWidth / 2,
+      yPos + 30,
+      { align: 'center' }
+    );
+    doc.text(
+      'We strongly oppose the practice of dowry in all forms.',
+      pageWidth / 2,
+      yPos + 40,
+      { align: 'center' }
+    );
+
+    // Date and signature
+    doc.setFontSize(10);
+    doc.setTextColor(0, 0, 0);
+    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, pageWidth / 2, yPos + 60, { align: 'center' });
+    doc.setDrawColor(0, 0, 0);
+    doc.setLineWidth(0.5);
+    doc.line(pageWidth / 2 - 40, yPos + 70, pageWidth / 2 + 40, yPos + 70);
+    doc.text('Digital Signature', pageWidth / 2, yPos + 75, { align: 'center' });
+
+    doc.save('dahej-certificate.pdf');
   };
   
   const startNegotiationGame = () => {
