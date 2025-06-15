@@ -10,13 +10,13 @@ const MemeDisplay: React.FC<MemeDisplayProps> = ({ total }) => {
   const getMemeText = () => {
     const absTotal = Math.abs(total);
     if (absTotal < 1000000) {
-      return "Budget Wedding: You're getting a discount groom!";
+      return "Budget Wedding: You're getting a discount groom! At least he's not a scammer!";
     } else if (absTotal < 5000000) {
-      return "Mid-range package: Includes one groom with average expectations!";
+      return "Mid-range package: Includes one groom with average expectations! And his mother's wishlist!";
     } else if (absTotal < 10000000) {
-      return "Premium Package: Gold-plated groom with extra demands!";
+      return "Premium Package: Gold-plated groom with extra demands! Comes with a lifetime supply of drama!";
     } else {
-      return "Ultra Luxury Package: Does the groom come with superpowers?";
+      return "Ultra Luxury Package: Does the groom come with superpowers? Or just super expectations?";
     }
   };
 
