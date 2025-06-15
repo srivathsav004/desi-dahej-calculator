@@ -149,3 +149,39 @@ export const DOWRY_FACTS = [
   'The Dowry Prohibition Act, 1961 makes giving, taking, or demanding dowry illegal with imprisonment up to 5 years.',
   'Section 498A of the Indian Penal Code protects women from cruelty by husband or his relatives in connection with demands for dowry.',
 ];
+
+export const MEME_LEVELS = [
+  'Mild',
+  'Medium',
+  'Spicy',
+  'Extra Spicy',
+  'Nuclear'
+];
+
+export const JOB_TITLES = [
+  'Software Engineer',
+  'Doctor',
+  'IAS Officer',
+  'Bank Manager',
+  'Business Owner',
+  'CA/CS',
+  'Professor',
+  'Lawyer',
+  'Government Employee',
+  'Private Job',
+  'Defense Officer',
+  'Pilot',
+  'Architect',
+  'Engineer (Other)',
+  'Teacher',
+  'Entrepreneur',
+  'Sales Professional',
+  'Marketing Manager',
+  'HR Manager',
+  'Data Scientist',
+  'AI Engineer',
+  'Product Manager',
+  'Consultant',
+  'Freelancer',
+  'Other'
+];

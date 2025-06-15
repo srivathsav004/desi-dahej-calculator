@@ -22,6 +22,9 @@ export interface AdditionalDetails {
   motherInLawWishlist: string[];
   brideMoreQualified: boolean;
   goldWeight: number;
+  memeLevel: string;
+  negotiationSkill: number;
+  hasDowryInsurance: boolean;
 }
 
 export interface DowryCalculatorInputs {
@@ -40,6 +43,8 @@ export interface DowryBreakdown {
   offSeasonDiscount: number;
   goldEstimateValue: number;
   motherInLawWishlistTotal: number;
+  negotiationDiscount: number;
+  insuranceDiscount: number;
   total: number;
 }
 

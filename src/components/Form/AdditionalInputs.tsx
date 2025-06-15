@@ -4,7 +4,7 @@ import Dropdown from '../UI/Dropdown';
 import Toggle from '../UI/Toggle';
 import Slider from '../UI/Slider';
 import MultiSelect from '../UI/MultiSelect';
-import { SEASON_OPTIONS, MOTHER_IN_LAW_WISHLIST_OPTIONS } from '../../utils/constants';
+import { SEASON_OPTIONS, MOTHER_IN_LAW_WISHLIST_OPTIONS, MEME_LEVELS } from '../../utils/constants';
 
 interface AdditionalInputsProps {
   additionalDetails: AdditionalDetails;
@@ -40,6 +40,15 @@ const AdditionalInputs: React.FC<AdditionalInputsProps> = ({
           tooltip="Off-season weddings get a discount!"
         />
         
+        <Dropdown
+          id="meme-level"
+          label="Meme Level"
+          value={additionalDetails.memeLevel || 'Medium'}
+          options={MEME_LEVELS}
+          onChange={(value) => updateField('memeLevel', value)}
+          tooltip="Choose how spicy you want your results!"
+        />
+        
         <Toggle
           id="meme-mode"
           label="Meme Mode"
@@ -71,6 +80,25 @@ const AdditionalInputs: React.FC<AdditionalInputsProps> = ({
           step={10}
           onChange={(value) => updateField('goldWeight', value)}
           valueLabel="grams"
+        />
+
+        <Slider
+          id="negotiation-skill"
+          label="Negotiation Skill Level"
+          value={additionalDetails.negotiationSkill || 50}
+          min={0}
+          max={100}
+          step={10}
+          onChange={(value) => updateField('negotiationSkill', value)}
+          valueLabel="%"
+        />
+
+        <Toggle
+          id="has-dowry-insurance"
+          label="Has Dowry Insurance?"
+          checked={additionalDetails.hasDowryInsurance || false}
+          onChange={(checked) => updateField('hasDowryInsurance', checked)}
+          tooltip="Get a 10% discount if you have dowry insurance!"
         />
       </div>
     </div>

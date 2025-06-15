@@ -3,7 +3,7 @@ import { GroomDetails } from '../../types';
 import Dropdown from '../UI/Dropdown';
 import Input from '../UI/Input';
 import Toggle from '../UI/Toggle';
-import { QUALIFICATION_OPTIONS, CAR_OPTIONS, COMPLEXION_OPTIONS } from '../../utils/constants';
+import { QUALIFICATION_OPTIONS, CAR_OPTIONS, COMPLEXION_OPTIONS, JOB_TITLES } from '../../utils/constants';
 
 interface GroomSectionProps {
   groomDetails: GroomDetails;
@@ -35,13 +35,13 @@ const GroomSection: React.FC<GroomSectionProps> = ({ groomDetails, onChange }) =
           onChange={(value) => updateField('qualification', value)}
         />
         
-        <Input
+        <Dropdown
           id="groom-job-title"
           label="Job Title"
-          type="text"
           value={groomDetails.jobTitle}
-          onChange={(value) => updateField('jobTitle', value as string)}
-          placeholder="e.g., Software Engineer"
+          options={JOB_TITLES}
+          onChange={(value) => updateField('jobTitle', value)}
+          tooltip="Select the groom's profession"
         />
         
         <Input

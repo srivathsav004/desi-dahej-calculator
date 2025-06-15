@@ -58,6 +58,15 @@ export const calculateDowry = (inputs: DowryCalculatorInputs): DowryBreakdown =>
   // Mother-in-law wishlist total (rough estimate: ₹50,000 per item)
   const motherInLawWishlistTotal = additional.motherInLawWishlist.length * 50000;
   
+  // Negotiation skill discount (up to 20% based on skill level)
+  const negotiationDiscount = (baseDowry + jobMultiplier + foreignBonus + carValueAddition + educationRecoveryFee + prestigeTax + goldEstimateValue + motherInLawWishlistTotal) 
+    * (additional.negotiationSkill / 500); // 0.2 = 20% max discount
+  
+  // Dowry insurance discount (10% if insured)
+  const insuranceDiscount = additional.hasDowryInsurance 
+    ? (baseDowry + jobMultiplier + foreignBonus + carValueAddition + educationRecoveryFee + prestigeTax + goldEstimateValue + motherInLawWishlistTotal) * 0.1
+    : 0;
+  
   // Calculate total
   let total = baseDowry + 
     jobMultiplier + 
@@ -67,7 +76,9 @@ export const calculateDowry = (inputs: DowryCalculatorInputs): DowryBreakdown =>
     prestigeTax - 
     offSeasonDiscount + 
     goldEstimateValue + 
-    motherInLawWishlistTotal;
+    motherInLawWishlistTotal -
+    negotiationDiscount -
+    insuranceDiscount;
   
   // Apply bride qualifications modifiers
   if (bride.qualification === 'IAS' || bride.qualification === 'PhD') {
@@ -93,6 +104,8 @@ export const calculateDowry = (inputs: DowryCalculatorInputs): DowryBreakdown =>
     offSeasonDiscount,
     goldEstimateValue,
     motherInLawWishlistTotal,
+    negotiationDiscount,
+    insuranceDiscount,
     total
   };
 };

@@ -19,6 +19,8 @@ const DowryBreakdown: React.FC<DowryBreakdownProps> = ({ breakdown }) => {
     offSeasonDiscount,
     goldEstimateValue,
     motherInLawWishlistTotal,
+    negotiationDiscount,
+    insuranceDiscount,
     total
   } = breakdown;
 
@@ -102,6 +104,20 @@ const DowryBreakdown: React.FC<DowryBreakdownProps> = ({ breakdown }) => {
           <motion.div variants={item} className="flex justify-between">
             <span>Mother-in-Law Wishlist Total:</span>
             <span className="font-medium">{formatCurrency(motherInLawWishlistTotal)}</span>
+          </motion.div>
+        )}
+
+        {negotiationDiscount > 0 && (
+          <motion.div variants={item} className="flex justify-between">
+            <span>Negotiation Skill Discount:</span>
+            <span className="font-medium text-success-dark">-{formatCurrency(negotiationDiscount)}</span>
+          </motion.div>
+        )}
+
+        {insuranceDiscount > 0 && (
+          <motion.div variants={item} className="flex justify-between">
+            <span>Dowry Insurance Discount:</span>
+            <span className="font-medium text-success-dark">-{formatCurrency(insuranceDiscount)}</span>
           </motion.div>
         )}
 

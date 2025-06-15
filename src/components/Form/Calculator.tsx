@@ -34,6 +34,9 @@ const Calculator: React.FC<CalculatorProps> = ({ onCalculate }) => {
       motherInLawWishlist: [],
       brideMoreQualified: false,
       goldWeight: 100,
+      memeLevel: 'Medium',
+      negotiationSkill: 50,
+      hasDowryInsurance: false,
     },
   });
 
