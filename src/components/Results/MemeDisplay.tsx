@@ -1,77 +1,45 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { MEMES } from '../../utils/constants';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { formatCurrency } from '../../utils/calculations';
 
 interface MemeDisplayProps {
-  show: boolean;
+  total: number;
 }
 
-const MemeDisplay: React.FC<MemeDisplayProps> = ({ show }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  useEffect(() => {
-    if (show) {
-      const interval = setInterval(() => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % MEMES.length);
-      }, 5000);
-
-      return () => clearInterval(interval);
+const MemeDisplay: React.FC<MemeDisplayProps> = ({ total }) => {
+  const getMemeText = () => {
+    const absTotal = Math.abs(total);
+    if (absTotal < 1000000) {
+      return "Budget Wedding: You're getting a discount groom!";
+    } else if (absTotal < 5000000) {
+      return "Mid-range package: Includes one groom with average expectations!";
+    } else if (absTotal < 10000000) {
+      return "Premium Package: Gold-plated groom with extra demands!";
+    } else {
+      return "Ultra Luxury Package: Does the groom come with superpowers?";
     }
-  }, [show]);
-
-  if (!show) return null;
-
-  const nextMeme = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % MEMES.length);
-  };
-
-  const prevMeme = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + MEMES.length) % MEMES.length);
   };
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="card mb-6"
+      className="mt-6 p-4 bg-ivory rounded-lg border border-gold"
     >
-      <h2 className="card-header">Dahej Memes</h2>
-      <div className="relative">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentIndex}
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -100 }}
-            transition={{ duration: 0.5 }}
-            className="flex flex-col items-center"
-          >
-            <img
-              src={MEMES[currentIndex].url}
-              alt="Dowry Meme"
-              className="w-full max-w-md h-64 object-cover rounded-lg mb-4"
-            />
-            <p className="text-center text-maroon italic">{MEMES[currentIndex].caption}</p>
-          </motion.div>
-        </AnimatePresence>
-
-        <button
-          onClick={prevMeme}
-          className="absolute left-0 top-1/2 transform -translate-y-1/2 p-2 bg-white/80 rounded-full shadow-md"
-          aria-label="Previous meme"
-        >
-          <ChevronLeft className="text-maroon" />
-        </button>
-
-        <button
-          onClick={nextMeme}
-          className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-white/80 rounded-full shadow-md"
-          aria-label="Next meme"
-        >
-          <ChevronRight className="text-maroon" />
-        </button>
+      <h4 className="text-lg font-baloo mb-2 text-maroon">Meme Corner</h4>
+      <div className="space-y-4">
+        <div className="text-center">
+          <p className="text-xl font-medium">{getMemeText()}</p>
+        </div>
+        <div className="flex justify-center">
+          <img
+            src={`https://api.memegen.link/images/custom/${encodeURIComponent(
+              getMemeText()
+            )}.png?background=https://i.imgur.com/CZyQxqD.jpg`}
+            alt="Dowry Meme"
+            className="max-w-full h-auto rounded-lg shadow-lg"
+          />
+        </div>
       </div>
     </motion.div>
   );

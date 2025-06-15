@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { DowryBreakdown, ChartData } from '../../types';
 import DowryBreakdownComponent from './DowryBreakdown';
 import PieChart from './PieChart';
 import MemeDisplay from './MemeDisplay';
 import { getTagline, formatCurrency, prepareChartData } from '../../utils/calculations';
-import { Download, Share2 } from 'lucide-react';
+import { Download, Share2, Heart, Star, TrendingUp, TrendingDown } from 'lucide-react';
 import jsPDF from 'jspdf';
+import NegotiationGame from './NegotiationGame';
 
 interface ResultCardProps {
   breakdown: DowryBreakdown;
@@ -16,6 +17,8 @@ interface ResultCardProps {
 const ResultCard: React.FC<ResultCardProps> = ({ breakdown, showMemes }) => {
   const [showNegotiationGame, setShowNegotiationGame] = useState(false);
   const [negotiationMultiplier, setNegotiationMultiplier] = useState(1);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [showComparison, setShowComparison] = useState(false);
   
   const chartData: ChartData[] = prepareChartData(breakdown);
   const tagline = getTagline(breakdown.total);
@@ -44,81 +47,52 @@ const ResultCard: React.FC<ResultCardProps> = ({ breakdown, showMemes }) => {
   const handleDownloadResult = () => {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
-
-    // Borders
-    doc.setDrawColor(139, 0, 0);
+    
+    // Add decorative border
+    doc.setDrawColor(139, 0, 0); // Maroon color
     doc.setLineWidth(2);
-    doc.rect(10, 10, pageWidth - 20, pageHeight - 20);
-    doc.setDrawColor(218, 165, 32);
-    doc.setLineWidth(0.5);
-    doc.rect(15, 15, pageWidth - 30, pageHeight - 30);
-
-    // Corners
-    const cornerSize = 20;
-    const drawCorner = (x: number, y: number, rotate: number) => {
-      const rad = (rotate * Math.PI) / 180;
-      const cos = Math.cos(rad);
-      const sin = Math.sin(rad);
-      doc.setDrawColor(218, 165, 32);
-      doc.setLineWidth(1);
-      doc.line(x, y, x + cornerSize * cos, y + cornerSize * sin);
-      doc.line(x, y, x - cornerSize * sin, y + cornerSize * cos);
-    };
-    drawCorner(15, 15, 0);
-    drawCorner(pageWidth - 15, 15, 90);
-    drawCorner(pageWidth - 15, pageHeight - 15, 180);
-    drawCorner(15, pageHeight - 15, 270);
-
-    // Title
-    doc.setFontSize(28);
+    doc.roundedRect(10, 10, pageWidth - 20, 277, 3, 3);
+    
+    // Header
+    doc.setFontSize(24);
     doc.setTextColor(139, 0, 0);
     doc.setFont('helvetica', 'bold');
-    doc.text('Desi Dahej Calculator', pageWidth / 2, 40, { align: 'center' });
-    doc.setDrawColor(218, 165, 32);
+    doc.text('Dahej Calculator Certificate', pageWidth / 2, 30, { align: 'center' });
+    
+    // Decorative line
+    doc.setDrawColor(218, 165, 32); // Gold color
     doc.setLineWidth(1);
-    doc.line(pageWidth / 2 - 60, 45, pageWidth / 2 + 60, 45);
-
-    // Subtitle
-    doc.setFontSize(18);
+    doc.line(30, 40, pageWidth - 30, 40);
+    
+    // Result
+    doc.setFontSize(20);
     doc.setTextColor(0, 0, 0);
-    doc.setFont('helvetica', 'normal');
-    doc.text('Official Certificate', pageWidth / 2, 60, { align: 'center' });
-
-    // Tagline
-    doc.setFillColor(245, 245, 220);
-    doc.roundedRect(20, 70, pageWidth - 40, 20, 3, 3, 'F');
-    doc.setFontSize(14);
-    doc.setTextColor(139, 0, 0);
-    doc.text(tagline, pageWidth / 2, 83, { align: 'center' });
-
-    // Total Amount Box (smaller font, centered)
-    doc.setFillColor(139, 0, 0);
-    doc.roundedRect(20, 100, pageWidth - 40, 22, 3, 3, 'F');
-    doc.setFontSize(18);
-    doc.setTextColor(255, 255, 255);
-    doc.setFont('helvetica', 'bold');
     doc.text(
       `Total ${breakdown.total < 0 ? 'Reverse Dowry' : 'Dowry'}: ${formatCurrency(breakdown.total)}`,
       pageWidth / 2,
-      115,
+      60,
       { align: 'center' }
     );
-
+    
+    // Tagline
+    doc.setFontSize(16);
+    doc.setTextColor(139, 0, 0);
+    doc.text(tagline, pageWidth / 2, 75, { align: 'center' });
+    
     // Breakdown Table
     doc.setFontSize(16);
     doc.setTextColor(0, 0, 0);
     doc.setFont('helvetica', 'bold');
-    doc.text('Detailed Breakdown', pageWidth / 2, 140, { align: 'center' });
-
+    doc.text('Detailed Breakdown', pageWidth / 2, 95, { align: 'center' });
+    
     doc.setFontSize(12);
     doc.setFont('helvetica', 'normal');
-    let yPos = 155;
+    let yPos = 110;
     const labelX = 30;
     const valueX = pageWidth - 30;
     const rowHeight = 12;
     let rowIndex = 0;
-
+    
     const breakdownItems = [
       { label: 'Base Dowry', value: breakdown.baseDowry },
       { label: 'Job Multiplier', value: breakdown.jobMultiplier },
@@ -127,9 +101,11 @@ const ResultCard: React.FC<ResultCardProps> = ({ breakdown, showMemes }) => {
       { label: 'Education Fee', value: breakdown.educationRecoveryFee },
       { label: 'Prestige Tax', value: breakdown.prestigeTax },
       { label: 'Gold Value', value: breakdown.goldEstimateValue },
-      { label: 'MIL Wishlist', value: breakdown.motherInLawWishlistTotal }
+      { label: 'MIL Wishlist', value: breakdown.motherInLawWishlistTotal },
+      { label: 'Negotiation Discount', value: breakdown.negotiationDiscount },
+      { label: 'Insurance Discount', value: breakdown.insuranceDiscount }
     ];
-
+    
     breakdownItems.forEach((item) => {
       if (item.value > 0) {
         // Alternating row background
@@ -145,21 +121,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ breakdown, showMemes }) => {
         rowIndex++;
       }
     });
-
-    if (breakdown.offSeasonDiscount > 0) {
-      doc.setFillColor(220, 255, 220);
-      doc.roundedRect(22, yPos - 7, pageWidth - 44, rowHeight, 2, 2, 'F');
-      doc.setTextColor(0, 128, 0);
-      doc.text('Off-Season Discount', labelX, yPos);
-      doc.text(`-${formatCurrency(breakdown.offSeasonDiscount)}`, valueX, yPos, { align: 'right' });
-      yPos += rowHeight;
-    }
-
-    // Decorative line
-    doc.setDrawColor(218, 165, 32);
-    doc.setLineWidth(1);
-    doc.line(20, yPos + 5, pageWidth - 20, yPos + 5);
-
+    
     // Disclaimer
     doc.setFillColor(245, 245, 245);
     doc.roundedRect(20, yPos + 15, pageWidth - 40, 30, 3, 3, 'F');
@@ -177,7 +139,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ breakdown, showMemes }) => {
       yPos + 40,
       { align: 'center' }
     );
-
+    
     // Date and signature
     doc.setFontSize(10);
     doc.setTextColor(0, 0, 0);
@@ -186,7 +148,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ breakdown, showMemes }) => {
     doc.setLineWidth(0.5);
     doc.line(pageWidth / 2 - 40, yPos + 70, pageWidth / 2 + 40, yPos + 70);
     doc.text('Digital Signature', pageWidth / 2, yPos + 75, { align: 'center' });
-
+    
     doc.save('dahej-certificate.pdf');
   };
   
@@ -196,14 +158,18 @@ const ResultCard: React.FC<ResultCardProps> = ({ breakdown, showMemes }) => {
   
   const handleNegotiationResult = (agreed: boolean) => {
     if (agreed) {
-      // If user agrees to demands, double the dowry
       setNegotiationMultiplier(2);
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 3000);
       alert('Negotiations failed! Your dowry amount has doubled! 😱');
     } else {
-      // If user refuses demands, keep the original dowry
       alert('You stood your ground! Good job standing up against dowry demands! 👏');
     }
     setShowNegotiationGame(false);
+  };
+  
+  const toggleComparison = () => {
+    setShowComparison(!showComparison);
   };
   
   return (
@@ -234,60 +200,90 @@ const ResultCard: React.FC<ResultCardProps> = ({ breakdown, showMemes }) => {
             </div>
           </div>
           
-          <div className="mt-6 flex flex-col md:flex-row gap-3 justify-center">
-            <button
+          <div className="mt-6 flex flex-wrap justify-center gap-4">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="btn-primary flex items-center gap-2"
               onClick={handleShareResult}
-              className="btn-secondary flex items-center justify-center gap-2"
             >
-              <Share2 size={18} />
+              <Share2 size={20} />
               Share Result
-            </button>
-            
-            <button
+            </motion.button>
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="btn-secondary flex items-center gap-2"
               onClick={handleDownloadResult}
-              className="btn-gold flex items-center justify-center gap-2"
             >
-              <Download size={18} />
+              <Download size={20} />
               Download Certificate
-            </button>
-            
-            <button
+            </motion.button>
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="btn-accent flex items-center gap-2"
               onClick={startNegotiationGame}
-              className="btn-primary flex items-center justify-center gap-2"
             >
-              Negotiation Game
-            </button>
+              <TrendingUp size={20} />
+              Negotiate Dowry
+            </motion.button>
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="btn-info flex items-center gap-2"
+              onClick={toggleComparison}
+            >
+              <TrendingDown size={20} />
+              Compare with Average
+            </motion.button>
           </div>
+
+          <AnimatePresence>
+            {showComparison && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="mt-6 p-4 bg-ivory rounded-lg border border-gold"
+              >
+                <h4 className="text-lg font-baloo mb-2 text-maroon">Market Comparison</h4>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span>Your Dowry:</span>
+                    <span className="font-medium">{formatCurrency(adjustedTotal)}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Average Dowry:</span>
+                    <span className="font-medium">{formatCurrency(5000000)}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Difference:</span>
+                    <span className={`font-medium ${adjustedTotal < 5000000 ? 'text-success-dark' : 'text-error-dark'}`}>
+                      {formatCurrency(adjustedTotal - 5000000)}
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {showMemes && <MemeDisplay total={adjustedTotal} />}
         </div>
-        
-        {showNegotiationGame && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg max-w-md w-full">
-              <h3 className="text-xl font-baloo mb-4 text-maroon">Negotiation Challenge</h3>
-              <p className="mb-6">The groom's family has made additional demands! Will you agree?</p>
-              <p className="font-medium mb-4">
-                "We would like a luxury car and 100g more gold in the dowry package."
-              </p>
-              <div className="flex gap-4 justify-end">
-                <button
-                  onClick={() => handleNegotiationResult(false)}
-                  className="btn-secondary"
-                >
-                  Refuse
-                </button>
-                <button
-                  onClick={() => handleNegotiationResult(true)}
-                  className="btn-gold"
-                >
-                  Agree
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
       </motion.div>
-      
-      <MemeDisplay show={showMemes} />
+
+      <AnimatePresence>
+        {showNegotiationGame && (
+          <NegotiationGame
+            initialAmount={breakdown.total}
+            onComplete={handleNegotiationResult}
+            onClose={() => setShowNegotiationGame(false)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
