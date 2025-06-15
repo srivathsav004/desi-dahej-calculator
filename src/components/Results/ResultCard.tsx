@@ -250,23 +250,23 @@ const ResultCard: React.FC<ResultCardProps> = ({ breakdown, showMemes }) => {
                 exit={{ opacity: 0, y: -20 }}
                 className="mt-6 p-4 bg-ivory rounded-lg border border-gold"
               >
-                <h4 className="text-lg font-baloo mb-2 text-maroon">Market Comparison</h4>
+                <h4 className="text-lg font-baloo mb-2 text-maroon">Market Analysis</h4>
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <span>Your Dowry:</span>
+                    <span>Your Dowry Estimate:</span>
                     <span className="font-medium">{formatCurrency(adjustedTotal)}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span>Average Dowry:</span>
+                    <span>Market Average:</span>
                     <span className="font-medium">{formatCurrency(5000000)}</span>
-              </div>
+                  </div>
                   <div className="flex justify-between items-center">
-                    <span>Difference:</span>
+                    <span>Market Position:</span>
                     <span className={`font-medium ${adjustedTotal < 5000000 ? 'text-success-dark' : 'text-error-dark'}`}>
                       {formatCurrency(adjustedTotal - 5000000)}
                     </span>
-            </div>
-          </div>
+                  </div>
+                </div>
               </motion.div>
         )}
           </AnimatePresence>
