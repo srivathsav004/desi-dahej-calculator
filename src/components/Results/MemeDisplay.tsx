@@ -32,11 +32,11 @@ const MemeDisplay: React.FC<MemeDisplayProps> = ({ total }) => {
           <p className="text-xl font-medium">{getMemeText()}</p>
         </div>
         <div className="flex justify-center">
-          <img
+            <img
             src={`https://api.memegen.link/images/custom/${encodeURIComponent(
               getMemeText()
             )}.png?background=https://i.imgur.com/CZyQxqD.jpg`}
-            alt="Dowry Meme"
+              alt="Dowry Meme"
             className="max-w-full h-auto rounded-lg shadow-lg"
           />
         </div>

@@ -41,7 +41,7 @@ const GroomSection: React.FC<GroomSectionProps> = ({ groomDetails, onChange }) =
           value={groomDetails.jobTitle}
           options={JOB_TITLES}
           onChange={(value) => updateField('jobTitle', value)}
-          tooltip="Select the groom's profession"
+          tooltip="Select the groom's profession - affects dowry calculation"
         />
         
         <Input

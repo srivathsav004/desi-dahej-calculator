@@ -47,12 +47,12 @@ const ResultCard: React.FC<ResultCardProps> = ({ breakdown, showMemes }) => {
   const handleDownloadResult = () => {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
-    
+
     // Add decorative border
     doc.setDrawColor(139, 0, 0); // Maroon color
     doc.setLineWidth(2);
     doc.roundedRect(10, 10, pageWidth - 20, 277, 3, 3);
-    
+
     // Header
     doc.setFontSize(24);
     doc.setTextColor(139, 0, 0);
@@ -63,7 +63,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ breakdown, showMemes }) => {
     doc.setDrawColor(218, 165, 32); // Gold color
     doc.setLineWidth(1);
     doc.line(30, 40, pageWidth - 30, 40);
-    
+
     // Result
     doc.setFontSize(20);
     doc.setTextColor(0, 0, 0);
@@ -78,13 +78,13 @@ const ResultCard: React.FC<ResultCardProps> = ({ breakdown, showMemes }) => {
     doc.setFontSize(16);
     doc.setTextColor(139, 0, 0);
     doc.text(tagline, pageWidth / 2, 75, { align: 'center' });
-    
+
     // Breakdown Table
     doc.setFontSize(16);
     doc.setTextColor(0, 0, 0);
     doc.setFont('helvetica', 'bold');
     doc.text('Detailed Breakdown', pageWidth / 2, 95, { align: 'center' });
-    
+
     doc.setFontSize(12);
     doc.setFont('helvetica', 'normal');
     let yPos = 110;
@@ -92,7 +92,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ breakdown, showMemes }) => {
     const valueX = pageWidth - 30;
     const rowHeight = 12;
     let rowIndex = 0;
-    
+
     const breakdownItems = [
       { label: 'Base Dowry', value: breakdown.baseDowry },
       { label: 'Job Multiplier', value: breakdown.jobMultiplier },
@@ -105,7 +105,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ breakdown, showMemes }) => {
       { label: 'Negotiation Discount', value: breakdown.negotiationDiscount },
       { label: 'Insurance Discount', value: breakdown.insuranceDiscount }
     ];
-    
+
     breakdownItems.forEach((item) => {
       if (item.value > 0) {
         // Alternating row background
@@ -121,7 +121,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ breakdown, showMemes }) => {
         rowIndex++;
       }
     });
-    
+
     // Disclaimer
     doc.setFillColor(245, 245, 245);
     doc.roundedRect(20, yPos + 15, pageWidth - 40, 30, 3, 3, 'F');
@@ -139,7 +139,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ breakdown, showMemes }) => {
       yPos + 40,
       { align: 'center' }
     );
-    
+
     // Date and signature
     doc.setFontSize(10);
     doc.setTextColor(0, 0, 0);
@@ -148,7 +148,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ breakdown, showMemes }) => {
     doc.setLineWidth(0.5);
     doc.line(pageWidth / 2 - 40, yPos + 70, pageWidth / 2 + 40, yPos + 70);
     doc.text('Digital Signature', pageWidth / 2, yPos + 75, { align: 'center' });
-    
+
     doc.save('dahej-certificate.pdf');
   };
   
@@ -210,7 +210,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ breakdown, showMemes }) => {
               <Share2 size={20} />
               Share Result
             </motion.button>
-
+            
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -220,7 +220,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ breakdown, showMemes }) => {
               <Download size={20} />
               Download Certificate
             </motion.button>
-
+            
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -240,8 +240,8 @@ const ResultCard: React.FC<ResultCardProps> = ({ breakdown, showMemes }) => {
               <TrendingDown size={20} />
               Compare with Average
             </motion.button>
-          </div>
-
+        </div>
+        
           <AnimatePresence>
             {showComparison && (
               <motion.div
@@ -259,22 +259,22 @@ const ResultCard: React.FC<ResultCardProps> = ({ breakdown, showMemes }) => {
                   <div className="flex justify-between items-center">
                     <span>Average Dowry:</span>
                     <span className="font-medium">{formatCurrency(5000000)}</span>
-                  </div>
+              </div>
                   <div className="flex justify-between items-center">
                     <span>Difference:</span>
                     <span className={`font-medium ${adjustedTotal < 5000000 ? 'text-success-dark' : 'text-error-dark'}`}>
                       {formatCurrency(adjustedTotal - 5000000)}
                     </span>
-                  </div>
-                </div>
+            </div>
+          </div>
               </motion.div>
-            )}
+        )}
           </AnimatePresence>
 
           {showMemes && <MemeDisplay total={adjustedTotal} />}
         </div>
       </motion.div>
-
+      
       <AnimatePresence>
         {showNegotiationGame && (
           <NegotiationGame
