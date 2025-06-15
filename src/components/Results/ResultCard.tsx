@@ -57,7 +57,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ breakdown, showMemes }) => {
     doc.setFontSize(24);
     doc.setTextColor(139, 0, 0);
     doc.setFont('helvetica', 'bold');
-    doc.text('Dahej Calculator Certificate', pageWidth / 2, 30, { align: 'center' });
+    doc.text('Official Dahej Calculation Certificate', pageWidth / 2, 30, { align: 'center' });
     
     // Decorative line
     doc.setDrawColor(218, 165, 32); // Gold color
