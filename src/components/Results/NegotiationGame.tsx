@@ -19,15 +19,15 @@ const NegotiationGame: React.FC<NegotiationGameProps> = ({
 
   const demands = [
     {
-      text: "We would like a luxury car and 100g more gold in the dowry package.",
+      text: "We would like a luxury car and 100g more gold in the dowry package. It's a matter of family prestige!",
       amount: initialAmount * 0.3
     },
     {
-      text: "The groom's mother wants a separate house in the dowry.",
+      text: "The groom's mother wants a separate house in the dowry. She needs her space!",
       amount: initialAmount * 0.5
     },
     {
-      text: "We need a business setup for the groom's brother.",
+      text: "We need a business setup for the groom's brother. Family comes first!",
       amount: initialAmount * 0.7
     }
   ];
